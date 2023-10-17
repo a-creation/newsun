@@ -40,6 +40,20 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
       },
       group: 'sparklines',
     },
+    grid: {
+      show: true,
+      borderColor: theme.palette.divider,
+      xaxis: {
+        lines: {
+          show: true,
+        },
+      },
+      yaxis: {
+        lines: {
+          show: true,
+        },
+      },
+    },
     xaxis: {
       axisBorder: {
         show: false,
@@ -49,6 +63,14 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
       },
       type: "category",
       categories: days,
+    },
+    yaxis: {
+      labels: {
+        show: true,
+        formatter: function (value: any) {
+          return value + " %";
+        },
+      },
     },
     colors: [primary, secondary],
     stroke: {
@@ -90,7 +112,7 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
       subtitle="Last 7 days"
       action={
         <Box textAlign="right">
-          <Typography variant="h5" display="block">
+          {/* <Typography variant="h5" display="block">
             15.5%
           </Typography>
           <Box
@@ -102,7 +124,7 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
             borderRadius={2}
           >
             +0.5%
-          </Box>
+          </Box> */}
         </Box>
       }
     >
@@ -118,7 +140,7 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
         </Box>
 
         <Stack direction="row" spacing={2} mt={4}>
-          <Typography variant="subtitle1" color="textSecondary">
+          {/* <Typography variant="subtitle1" color="textSecondary">
             April 07 - April 14
           </Typography>
           <Typography
@@ -127,18 +149,18 @@ const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
             ml="auto !important"
           >
             14.5%
-          </Typography>
+          </Typography> */}
         </Stack>
         <Stack direction="row" spacing={2} mt={1}>
           <Typography variant="subtitle1" color="textSecondary">
-            Last Week
+            Past Hour
           </Typography>
           <Typography
             variant="subtitle1"
             color="textSecondary"
             ml="auto !important"
           >
-            18.3%
+            { renewablePercents[renewablePercents.length - 1] }%
           </Typography>
         </Stack>
       </>
