@@ -9,9 +9,14 @@ import SkeletonPaymentsCard from "../skeleton/PaymentsCard";
 
 interface PaymentsCardProps {
   isLoading: boolean;
+  emissions: Array<{ Emit: number, Day: string }>;
 }
 
-const Payments = ({ isLoading }: PaymentsCardProps) => {
+const Payments = ({ isLoading, emissions }: PaymentsCardProps) => {
+  const emits = emissions.map(item => Math.ceil(item.Emit * 100) / 100);
+  const totalEmits = emissions.reduce((accumulator, current) => accumulator + Math.ceil(current.Emit), 0);
+  const days = emissions.map(item => [(new Date(item.Day).getMonth().toString() + "/" + new Date(item.Day).getDate().toString())]);
+
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
@@ -60,7 +65,7 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
       },
     },
     xaxis: {
-      categories: [["M"], ["T"], ["W"], ["T"], ["F"], ["S"], ["S"]],
+      categories: days,
       axisBorder: {
         show: false,
       },
@@ -71,6 +76,9 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
     yaxis: {
       labels: {
         show: false,
+        formatter: function (value: any) {
+          return value + " kt CO2";
+        },
       },
     },
     tooltip: {
@@ -80,13 +88,13 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
   };
   const seriescolumnchart = [
     {
-      name: "Last Year ",
-      data: [29, 52, 38, 47, 56, 41, 46],
+      name: "kt CO2",
+      data: emits,
     },
-    {
-      name: "This Year ",
-      data: [71, 71, 71, 71, 71, 71, 71],
-    },
+    // {
+    //   name: "This Year ",
+    //   data: [71, 71, 71, 71, 71, 71, 71],
+    // },
   ];
 
   return (
@@ -95,14 +103,14 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
         <SkeletonPaymentsCard />
       ) : (
         <DashboardCard
-          title="Emissions (Co2)"
+          title="Emissions (kt Co2)"
           subtitle="Last 7 Days"
           action={
             <Box textAlign="left">
               <Typography variant="h5" display="block">
-                12,389
+                { totalEmits }
               </Typography>
-              <Box
+              {/* <Box
                 bgcolor="warning.light"
                 color="warning.main"
                 fontSize="12px"
@@ -111,7 +119,7 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
                 borderRadius={2}
               >
                 -3.08%
-              </Box>
+              </Box> */}
             </Box>
           }
         >
@@ -126,7 +134,7 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
               />
             </Box>
 
-            <Stack direction="row" spacing={2} mt={3}>
+            {/* <Stack direction="row" spacing={2} mt={3}>
               <Box color="primary.main" display="flex" alignItems="center">
                 <IconCircle size={16} />
               </Box>
@@ -155,7 +163,9 @@ const Payments = ({ isLoading }: PaymentsCardProps) => {
               >
                 48%
               </Typography>
-            </Stack>
+            </Stack> */
+            // TODO: Removed for project
+            }
           </>
         </DashboardCard>
       )}

@@ -24,9 +24,15 @@ import Image from "next/image";
 
 interface CongratsCardProps {
   isLoading: boolean;
+  wind: Array<{ Consumption: number, Cost: number, Hour: string }>;
+  solar: Array<{ Consumption: number, Cost: number, Hour: string }>; 
 }
 
-const CongratulationsCard = ({ isLoading }: CongratsCardProps) => {
+const CongratulationsCard = ({ isLoading, solar, wind }: CongratsCardProps) => {
+  const solarCons = solar.map(item => Math.ceil(item.Consumption * 100) / 100);
+  const windCons = wind.map(item => Math.ceil(item.Consumption * 100) / 100);
+  const days = wind.map(item => (new Date(item.Hour).getMonth().toString() + "/" + new Date(item.Hour).getDate().toString() + " " + new Date(item.Hour).getHours().toString() + ":00"));
+
   const lgUp = useMediaQuery((theme: Theme) => theme.breakpoints.up("sm"));
 
   const customizer = useSelector((state: AppState) => state.customizer);
@@ -110,17 +116,16 @@ const CongratulationsCard = ({ isLoading }: CongratsCardProps) => {
         show: false,
       },
       labels: {
-        show: true,
+        show: false,
       },
       type: "category",
-      categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+      categories: days,
     },
     yaxis: {
-     
       labels: {
         show: true,
         formatter: function (value: any) {
-          return value + "k";
+          return value + " kWh";
         },
       },
     },
@@ -132,13 +137,13 @@ const CongratulationsCard = ({ isLoading }: CongratsCardProps) => {
   const seriescongratulatechart = [
     {
       color: primary,
-      name: "",
-      data: [0, 20, 15, 19, 14, 25, 32],
+      name: "Solar",
+      data: solarCons,
     },
     {
       color: info,
-      name: "",
-      data: [0, 12, 19, 13, 26, 16, 25],
+      name: "Wind",
+      data: windCons,
     },
   ];
 
@@ -221,12 +226,12 @@ const CongratulationsCard = ({ isLoading }: CongratsCardProps) => {
               mb={3}
             >
               <Box>
-                <Typography variant="h5">Total Energy Output</Typography>
+                <Typography variant="h5">Total Energy Consumption (kWh)</Typography>
                 <Typography variant="subtitle2" color="textSecondary">
                   Weekly analysis
                 </Typography>
               </Box>
-              <CustomSelect
+              {/* <CustomSelect
                 labelId="month-dd"
                 id="month-dd"
                 size="small"
@@ -236,7 +241,9 @@ const CongratulationsCard = ({ isLoading }: CongratsCardProps) => {
                 <MenuItem value={1}>March 2023</MenuItem>
                 <MenuItem value={2}>April 2023</MenuItem>
                 <MenuItem value={3}>May 2023</MenuItem>
-              </CustomSelect>
+              </CustomSelect> */
+              // TODO: Removed for project
+              }
             </Stack>
             <Box height="260px">
               <Chart

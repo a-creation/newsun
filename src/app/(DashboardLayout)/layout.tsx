@@ -58,7 +58,9 @@ export default function RootLayout({
 
         {customizer.isHorizontal ? <HorizontalHeader /> : ""}
 
-        {/* {customizer.isHorizontal ? <Navigation /> : ""} */}
+        {
+        /* {customizer.isHorizontal ? <Navigation /> : ""} */ // TODO: Removed for project
+        }
         <PageWrapper
           className="page-wrapper"
           sx={{

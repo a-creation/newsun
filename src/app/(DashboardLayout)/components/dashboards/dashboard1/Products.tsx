@@ -8,9 +8,16 @@ import SkeletonProductsCard from "../skeleton/ProductCard";
 
 interface ProductsCardProps {
   isLoading: boolean;
+  wind: Array<{ Consumption: number, Cost: number, Hour: string }>;
+  solar: Array<{ Consumption: number, Cost: number, Hour: string }>; 
 }
 
-const Products = ({ isLoading }: ProductsCardProps) => {
+const Products = ({ isLoading, wind, solar }: ProductsCardProps) => {
+  const gasTotal = 6720.20;
+  const windTotal = wind.reduce((accumulator, current) => accumulator + (Math.ceil(current.Consumption * 100) / 100), 0);
+  const solarTotal = solar.reduce((accumulator, current) => accumulator + (Math.ceil(current.Consumption * 100) / 100), 0);
+  const total = gasTotal + windTotal + solarTotal;
+
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
@@ -29,7 +36,7 @@ const Products = ({ isLoading }: ProductsCardProps) => {
       height: 170,
       stacked: true,
     },
-    labels: ["2022", "2021", "2020"],
+    labels: ["Solar", "Wind", "Gas"],
     colors: [primary, error, info],
     plotOptions: {
       pie: {
@@ -49,14 +56,14 @@ const Products = ({ isLoading }: ProductsCardProps) => {
     },
 
     legend: {
-      show: false,
+      show: true,
     },
     tooltip: {
       theme: theme.palette.mode === "dark" ? "dark" : "light",
       fillSeriesColor: false,
     },
   };
-  const seriescolumnchart = [70, 18, 12];
+  const seriescolumnchart = [Math.ceil(solarTotal/total * 100), Math.ceil(windTotal/total * 100), Math.ceil(gasTotal/total * 100)];
 
   return (
     <>
@@ -64,14 +71,14 @@ const Products = ({ isLoading }: ProductsCardProps) => {
         <SkeletonProductsCard />
       ) : (
         <DashboardCard
-          title="Energy Types"
-          subtitle="Last Month"
+          title="Energy Types (% kWh)"
+          subtitle="Last 7 Days"
           action={
             <Box textAlign="right">
               <Typography variant="h5" display="block">
                 3
               </Typography>
-              <Box
+              {/* <Box
                 bgcolor="success.light"
                 color="success.main"
                 fontSize="12px"
@@ -80,7 +87,9 @@ const Products = ({ isLoading }: ProductsCardProps) => {
                 borderRadius={2}
               >
                 +26.5%
-              </Box>
+              </Box> */
+              // TODO: Removed for project
+              }
             </Box>
           }
         >
@@ -95,14 +104,14 @@ const Products = ({ isLoading }: ProductsCardProps) => {
               />
             </Box>
 
-            <Typography
+            {/* <Typography
               variant="subtitle1"
               color="textSecondary"
               textAlign="center"
               mt={2}
             >
               Solar, Wind, Gas
-            </Typography>
+            </Typography> */}
           </>
         </DashboardCard>
       )}

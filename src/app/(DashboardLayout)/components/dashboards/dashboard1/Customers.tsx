@@ -9,9 +9,17 @@ import SkeletonCustomersCard from "../skeleton/CustomerCard";
 
 interface CustomersCardProps {
   isLoading: boolean;
+  wind: Array<{ Consumption: number, Cost: number, Hour: string }>;
+  solar: Array<{ Consumption: number, Cost: number, Hour: string }>; 
 }
 
-const Customers = ({ isLoading }: CustomersCardProps) => {
+const Customers = ({ isLoading, wind, solar }: CustomersCardProps) => {
+  const solarCons = solar.map(item => Math.ceil(item.Consumption * 100) / 100);
+  const windCons = wind.map(item => Math.ceil(item.Consumption * 100) / 100);
+  const gasCons = Array.from({ length: windCons.length }, () => 100);
+  const renewablePercents = gasCons.map((value, i) => Math.ceil((solarCons[i] + windCons[i]) / (solarCons[i] + windCons[i] + value) * 10000) / 100);
+  const days = wind.map(item => (new Date(item.Hour).getMonth().toString() + "/" + new Date(item.Hour).getDate().toString() + " " + new Date(item.Hour).getHours().toString() + ":00"));
+
   // chart color
   const theme = useTheme();
   const primary = theme.palette.primary.main;
@@ -31,6 +39,16 @@ const Customers = ({ isLoading }: CustomersCardProps) => {
         enabled: true,
       },
       group: 'sparklines',
+    },
+    xaxis: {
+      axisBorder: {
+        show: false,
+      },
+      labels: {
+        show: false,
+      },
+      type: "category",
+      categories: days,
     },
     colors: [primary, secondary],
     stroke: {
@@ -57,8 +75,8 @@ const Customers = ({ isLoading }: CustomersCardProps) => {
   };
   const seriescolumnchart = [
     {
-      name: '',
-      data: [25, 66, 20, 40, 12, 30],
+      name: '% kWh',
+      data: renewablePercents,
     },
   ];
 
@@ -68,7 +86,7 @@ const Customers = ({ isLoading }: CustomersCardProps) => {
         <SkeletonCustomersCard />
       ) : (
         <DashboardCard
-      title="Renewables (%)"
+      title="Renewables (% kWh)"
       subtitle="Last 7 days"
       action={
         <Box textAlign="right">
