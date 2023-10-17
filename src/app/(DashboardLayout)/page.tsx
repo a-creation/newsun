@@ -15,8 +15,31 @@ import VisitUsa from "@/app/(DashboardLayout)/components/dashboards/dashboard1/V
 import LatestReviews from "@/app/(DashboardLayout)/components/dashboards/dashboard1/LatestReviews";
 import Welcome from "@/app/(DashboardLayout)/layout/shared/welcome/Welcome";
 
+interface Emission {
+  Emit: number;
+  Day: string;
+}
+
+interface Solar {
+  Consumption: number;
+  Cost: number;
+  Hour: string;
+}
+
+interface Wind {
+  Consumption: number;
+  Cost: number;
+  Hour: string;
+}
+
+interface EmissionsResponse {
+  emissions: Emission[];
+  solar: Solar[];
+  wind: Wind[];
+}
+
 export default function Dashboard() {
-  const [data, setData] = useState({});
+  const [data, setData] = useState<EmissionsResponse>({emissions: [], solar: [], wind: []});
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     fetch('https://climate-api-xzt5k2hfiq-ue.a.run.app/getData')
@@ -25,16 +48,14 @@ export default function Dashboard() {
     setLoading(false);
   }, []);
 
-  var emissions = [];
-  var solar = [];
-  var wind = [];
+  var emission: Emission[] = [];
+  var solar: Solar[]  = [];
+  var wind: Wind[] = [];
   if (Object.keys(data).length != 0) {
-    emissions = data.emissions;
+    emission = data.emissions;
     solar = data.solar;
     wind = data.wind;
   }
-  console.log(emissions);
-  console.log(data);
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>
@@ -45,7 +66,7 @@ export default function Dashboard() {
           <Grid item xs={12} lg={6}>
             <Grid container spacing={3}>
               <Grid item xs={12} lg={6} sm={6}>
-                <Payments isLoading={isLoading} emissions={emissions} />
+                <Payments isLoading={isLoading} emissions={emission} />
               </Grid>
               <Grid item xs={12} lg={6} sm={6}>
                 <Products isLoading={isLoading} solar={solar} wind={wind} />
