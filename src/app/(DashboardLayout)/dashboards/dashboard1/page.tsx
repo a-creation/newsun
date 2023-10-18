@@ -24,40 +24,7 @@ export default function Dashboard() {
 
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
-      <Box>
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={6}>
-            <CongratulationsCard isLoading={isLoading}  />
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} lg={6} sm={6}>
-                <Payments  isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12} lg={6} sm={6}>
-                <Products  isLoading={isLoading} />
-              </Grid>
-              <Grid item xs={12} lg={6} sm={6}>
-                <LatestDeals />
-              </Grid>
-              <Grid item xs={12} lg={6} sm={6}>
-                <Customers  isLoading={isLoading} />
-              </Grid>
-            </Grid>
-          </Grid>
-          {/* column */}
-          <Grid item xs={12} lg={8}>
-            <ProductTable />
-          </Grid>
-          <Grid item xs={12} lg={4}>
-            <VisitUsa />
-          </Grid>
-          <Grid item xs={12}>
-            <LatestReviews />
-          </Grid>
-        </Grid>
-        {/* <Welcome /> */}
-      </Box>
+      
     </PageContainer> 
   );
 }
